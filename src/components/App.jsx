@@ -4,6 +4,7 @@ import { ContactList } from './ContactList/ContactList';
 import { PhoneBook } from './App.styled';
 
 export const App = () => {
+  
   return (
     <PhoneBook>
       <h1>Phonebook</h1>

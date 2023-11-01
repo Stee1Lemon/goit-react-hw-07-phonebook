@@ -1,16 +1,25 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteContactRedux } from 'redux/contactsSlice';
+import { fetchContacts } from 'api/api';
+import { selectContacts, selectFilter } from 'redux/selectors';
+import { useEffect } from 'react';
+import { fetchContactsThunk } from 'redux/thunk';
 
 export const ContactList = () => {
-  const contacts = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
+  const contacts = useSelector(selectContacts);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContactsThunk());
+  }, [dispatch]);
 
   const deleteContact = id => {
     dispatch(deleteContactRedux(id));
   };
 
   const doFilteredContacts = () => {
+    // console.log(contacts);
     return contacts.filter(el =>
       el.name.toLowerCase().includes(filter.toLowerCase())
     );

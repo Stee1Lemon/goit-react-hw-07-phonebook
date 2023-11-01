@@ -1,6 +1,11 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { fetchContactsThunk } from './thunk';
 
-const initialState = [];
+const initialState = {
+  items: [],
+  isLoading: false,
+  error: '',
+};
 
 const contactsSlice = createSlice({
   name: 'contacts',
@@ -19,6 +24,12 @@ const contactsSlice = createSlice({
     deleteContactRedux(state, action) {
       return state.filter(el => el.id !== action.payload);
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(fetchContactsThunk.fulfilled, (state, { payload }) => {
+      // console.log(state.contacts);
+      state.items = payload;
+    });
   },
 });
 
