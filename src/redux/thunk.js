@@ -6,11 +6,12 @@ export const fetchContactsThunk = createAsyncThunk(
   async () => {
     try {
       const res = await fetchContacts();
-      //   console.log(res);
-      return res;
+      if (!res.ok) throw new Error('Request failed');
+      const data = await res.json();
+      return data;
     } catch (error) {
+      console.log(error);
       throw error;
-      //   console.log(error);
     }
   }
 );

@@ -1,5 +1,6 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { fetchContactsThunk } from './thunk';
+import { fetchDeleteContact } from 'api/api';
 
 const initialState = {
   items: [],
@@ -11,27 +12,33 @@ const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
   reducers: {
-    addContactRedux: {
-      prepare(contact) {
-        return {
-          payload: { id: nanoid(), ...contact },
-        };
-      },
-      reducer(state, action) {
-        state.push(action.payload);
-      },
-    },
-    deleteContactRedux(state, action) {
-      return state.filter(el => el.id !== action.payload);
+    deleteContactRedux(state, { payload }) {
+      fetchDeleteContact(payload);
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchContactsThunk.fulfilled, (state, { payload }) => {
-      // console.log(state.contacts);
-      state.items = payload;
-    });
+    builder
+      .addCase(fetchContactsThunk.fulfilled, (state, { payload }) => {
+        state.items = payload;
+        state.isLoading = false;
+        state.error = '';
+      })
+      .addMatcher(
+        action => action.type.endsWith('/pending'),
+        state => {
+          state.isLoading = true;
+        }
+      )
+      .addMatcher(
+        action => action.type.endsWith('/rejected'),
+        state => {
+          state.items = [];
+          state.isLoading = false;
+          state.error = 'Request failed';
+        }
+      )
   },
 });
 
-export const { addContactRedux, deleteContactRedux } = contactsSlice.actions;
+export const { deleteContactRedux } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;

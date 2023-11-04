@@ -18,27 +18,28 @@ export const ContactList = () => {
   };
 
   const doFilteredContacts = () => {
-    // console.log(contacts);
     return contacts.filter(el =>
       el.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
   const filteredContacts = doFilteredContacts();
 
-  if (!filteredContacts.length) return null;
+  if (!filteredContacts?.length) return null;
 
   return (
-    <ul>
-      {filteredContacts.map(({ name, id, number }) => {
-        return (
-          <li key={id}>
-            <p>
-              {name}: {number}
-            </p>
-            <button onClick={() => deleteContact(id)}>Delete</button>
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      <ul>
+        {filteredContacts.map(({ name, id, number }) => {
+          return (
+            <li key={id}>
+              <p>
+                {name}: {number}
+              </p>
+              <button onClick={() => deleteContact(id)}>Delete</button>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };
