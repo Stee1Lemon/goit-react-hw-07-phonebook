@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContactRedux } from 'redux/contactsSlice';
 import { selectContacts, selectFilter } from 'redux/selectors';
 import { useEffect } from 'react';
 import { fetchContactsThunk } from 'redux/thunk';
+import { fetchDeleteContact } from 'api/api';
 
 export const ContactList = () => {
   const contacts = useSelector(selectContacts);
@@ -13,8 +13,9 @@ export const ContactList = () => {
     dispatch(fetchContactsThunk());
   }, [dispatch]);
 
-  const deleteContact = id => {
-    dispatch(deleteContactRedux(id));
+  const deleteContact = async id => {
+    await fetchDeleteContact(id);
+    dispatch(fetchContactsThunk());
   };
 
   const doFilteredContacts = () => {

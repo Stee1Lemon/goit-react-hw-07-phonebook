@@ -1,22 +1,20 @@
 import { fetchNewContact } from 'api/api';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchContactsThunk } from 'redux/thunk';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // const contacts = useSelector(selectContacts);
+  const dispatch = useDispatch();
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    // const filteredContacts = contacts.filter(
-    //   el => el.name.toLowerCase() === name.toLowerCase()
-    // );
-    // if (!filteredContacts) {
-    // }
-    fetchNewContact({ name, number });
-
-    // return alert('A contact with the same name already exists');
+    await fetchNewContact({ name, number });
+    dispatch(fetchContactsThunk());
+    setName('');
+    setNumber('');
   };
 
   return (
